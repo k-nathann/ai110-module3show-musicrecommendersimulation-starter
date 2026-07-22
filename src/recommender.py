@@ -54,13 +54,36 @@ class Recommender:
     def __init__(self, songs: List[Song]):
         self.songs = songs
 
+    @staticmethod
+    def _to_prefs(user: UserProfile) -> Dict:
+        """Adapt a UserProfile dataclass to the dict score_song() expects."""
+        return {
+            "favorite_genre": user.favorite_genre,
+            "favorite_mood": user.favorite_mood,
+            "target_energy": user.target_energy,
+        }
+
+    @staticmethod
+    def _to_song_dict(song: Song) -> Dict:
+        """Adapt a Song dataclass to the dict score_song() expects."""
+        return {"genre": song.genre, "mood": song.mood, "energy": song.energy}
+
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        """Return the top-k songs, highest score first, using score_song()."""
+        prefs = self._to_prefs(user)
+        ranked = sorted(
+            self.songs,
+            key=lambda song: score_song(prefs, self._to_song_dict(song))[0],
+            reverse=True,
+        )
+        return ranked[:k]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        """Return a plain-language explanation of why this song was scored."""
+        score, reasons = score_song(self._to_prefs(user), self._to_song_dict(song))
+        if not reasons:
+            return f"'{song.title}' scored {score:.2f} (no matching preferences)."
+        return f"'{song.title}' scored {score:.2f} because: " + "; ".join(reasons)
 
 # Columns that must be parsed as numbers so we can do math with them later.
 INT_FIELDS = ("id", "tempo_bpm")
