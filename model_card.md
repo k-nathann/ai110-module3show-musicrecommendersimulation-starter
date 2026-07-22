@@ -311,3 +311,16 @@ mathematically optimal while being obviously wrong to a human. It changed how I
 read the "Because you listened to…" rows in real apps — I now assume there is a
 simple weighted judge underneath, and that its blind spots come as much from the
 catalog it draws on as from the formula itself.
+
+AI tools shaped this project in two main ways. First, I leaned on them at the
+start to explain how major streaming platforms (like Spotify and YouTube)
+actually predict what a listener will like next, and the difference between
+collaborative filtering (learning from other users' behavior) and content-based
+filtering (matching song attributes). That explanation is what my whole design is
+based on — VibeFinder is essentially a small content-based recommender. Second,
+AI helped me understand *why* my user-profile targets failed, most memorably when
+it pointed out that my "chill lofi" profile set danceability to 0.20 even though
+the real lofi songs in my catalog sit around 0.58, so my own profile was working
+against the songs it was supposed to match. I still double-checked its work
+against my own musical intuition and by running the code and reading the actual
+terminal output, rather than trusting the explanations on their own.
